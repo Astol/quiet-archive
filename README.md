@@ -8,6 +8,10 @@ Personal platform for:
 
 ## V1 focus
 
+### Misc
+- [ ] Theme 
+- [ ] Page icon
+
 ### Core pages
 - [ ] Home
 - [ ] About
