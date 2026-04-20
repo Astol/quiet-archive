@@ -116,3 +116,7 @@ Personal platform for:
 - [ ] Better filtering and sorting
 - [ ] Analytics
 - [ ] Comments / guestbook
+
+## Credits
+
+Built with [Astro](https://astro.build/) and based on [AstroWind](https://github.com/arthelokyo/astrowind).
