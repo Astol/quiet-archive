@@ -1,6 +1,7 @@
 # Quiet Archive
 
 Personal platform for:
+
 - blog / dev diary
 - about / CV
 - projects
@@ -9,10 +10,12 @@ Personal platform for:
 ## V1 focus
 
 ### Misc
-- [ ] Theme 
+
+- [ ] Theme
 - [ ] Page icon
 
 ### Core pages
+
 - [ ] Home
 - [ ] About
 - [ ] Projects
@@ -25,6 +28,7 @@ Personal platform for:
 ### What each page should contain
 
 #### Home
+
 - [ ] Short intro
 - [ ] Quick links to main sections
 - [ ] Featured project
@@ -32,6 +36,7 @@ Personal platform for:
 - [ ] Latest wiki notes
 
 #### About
+
 - [ ] Who I am
 - [ ] What I work with
 - [ ] Experience summary
@@ -39,6 +44,7 @@ Personal platform for:
 - [ ] Links (GitHub, LinkedIn, email)
 
 #### Projects
+
 - [ ] Project list
 - [ ] Short description for each
 - [ ] Tech stack
@@ -46,6 +52,7 @@ Personal platform for:
 - [ ] Link to repo / demo if available
 
 #### Blog
+
 - [ ] Blog/dev diary list
 - [ ] Title
 - [ ] Date
@@ -53,21 +60,25 @@ Personal platform for:
 - [ ] Short excerpt
 
 #### Blog post
+
 - [ ] Title
 - [ ] Date
 - [ ] Tags
 - [ ] Markdown content
 
 #### Wiki
+
 - [ ] Simple article list
 - [ ] Title
 - [ ] Topic/tag
 - [ ] Short summary
 
 #### Admin login
+
 - [ ] Sign in with Supabase Auth
 
 #### Admin editor
+
 - [ ] Create post
 - [ ] Edit post
 - [ ] Draft / published
@@ -77,6 +88,7 @@ Personal platform for:
 - [ ] Markdown body
 
 ## V1 technical
+
 - [ ] Set up Astro project
 - [ ] Clean up template content
 - [ ] Add branding for Quiet Archive
@@ -88,6 +100,7 @@ Personal platform for:
 - [ ] Deploy to Cloudflare
 
 ## V2
+
 - [ ] Project detail pages
 - [ ] Wiki article pages from admin
 - [ ] Better editor
@@ -97,6 +110,7 @@ Personal platform for:
 - [ ] SEO improvements
 
 ## V3+
+
 - [ ] Dashboard
 - [ ] Content templates
 - [ ] Better filtering and sorting

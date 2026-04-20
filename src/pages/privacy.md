@@ -18,6 +18,7 @@ If authentication, forms, or admin features are used, additional data such as em
 ## Why data is processed
 
 Data is processed to:
+
 - keep the site running
 - protect the site from abuse
 - enable login/admin functionality

@@ -6,7 +6,6 @@ import Hero from '~/components/widgets/Hero.astro';
 import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Features3 from '~/components/widgets/Features3.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import { getPermalink } from '~/utils/permalinks';
@@ -22,16 +21,14 @@ const metadata = {
     <Header
       links={[
         { text: 'Home', href: '#' },
-        { text: 'About', href: '#about' },
-        { text: 'Resume', href: '#resume' },
-        { text: 'Porfolio', href: '#porfolio' },
-        { text: 'Blog', href: '#blog' },
-        { text: 'Github', href: 'https://github.com/arthelokyo' },
+        { text: 'About', href: '/#about' },
+        { text: 'Blog', href: '/blog' },
+        { text: 'Github', href: 'https://github.com/Astol' },
       ]}
       actions={[
         {
-          text: 'Hire me',
-          href: '#',
+          text: 'Contact me',
+          href: getPermalink('/contact#form'),
         },
       ]}
       isSticky
@@ -45,12 +42,13 @@ const metadata = {
     id="hero"
     title="Alexander Stolpe"
     tagline="Small notes. Sturdy systems."
-    actions={[{ variant: 'primary', text: 'Hire me', href: getPermalink('/contact#form') }]}
+    actions={[{ variant: 'primary', text: 'Contact me', href: getPermalink('/contact#form') }]}
   >
     <Fragment slot="subtitle">
       Software Developer, DevOps Engineer, and curious builder. <br />
       I help make software behave, guide it safely out into the world, and keep it on the right path once it gets there.
-      Most of my days are spent in the .NET world, where I'm fond of sturdy systems, thoughtful architecture, and useful notes.
+      Most of my days are spent in the .NET world, where I'm fond of sturdy systems, thoughtful architecture, and useful
+      notes.
     </Fragment>
   </Hero>
 
@@ -67,7 +65,15 @@ const metadata = {
           text: 'LinkedIn',
           href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a',
         },
-      }
+      },
+      {
+        icon: 'tabler:brand-github',
+        callToAction: {
+          target: '_blank',
+          text: 'GitHub',
+          href: 'https://github.com/Astol',
+        },
+      },
     ]}
     image={{
       src: '~/assets/images/me.webp',
@@ -78,14 +84,19 @@ const metadata = {
     <Fragment slot="content">
       <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">About me</h2>
       <p>
-        Welcome, traveler. I'm a software developer and DevOps engineer with a fondness for building things properly, deploying them safely, and learning something new along the way.
+        Welcome, traveler. I'm a software developer and DevOps engineer with a fondness for building things properly,
+        deploying them safely, and learning something new along the way.
       </p>
       <br />
       <p>
-        Most of my professional work lives in the .NET world, where I enjoy backend development, architecture, and the craft of writing code that is performant, maintainable, and pleasant to return to later.
+        Most of my professional work lives in the .NET world, where I enjoy backend development, architecture, and the
+        craft of writing code that is performant, maintainable, and pleasant to return to later.
       </p>
       <br />
-      <p>Quiet Archive is my little corner for projects, notes, experiments, and lessons gathered from the road. If you’re curious to follow the trail, you can find me here:</p>
+      <p>
+        Quiet Archive is my little corner for projects, notes, experiments, and lessons gathered from the road. If
+        you’re curious to follow the trail, you can find me here:
+      </p>
     </Fragment>
 
     <Fragment slot="bg">
@@ -101,14 +112,33 @@ const metadata = {
     items={[
       {
         title:
-          'IT Consultant <br /> <span class="font-normal">Consid AB</span> <br /> <span class="text-sm font-normal">2019 - Present</span>',
-        description: `Collaborate with clients to understand design requirements and objectives. <br /> Develop branding solutions, including logos, color palettes, and brand guidelines. <br /> Design marketing materials such as brochures, posters, and digital assets. <br /> Create visually appealing user interfaces for websites and applications.`,
+          'Software Developer / DevOps<br /> <span class="font-normal">Swedish government agency — consultant through Consid AB</span> <br /> <span class="text-sm font-normal">2019 - Present</span>',
+        description: `Long-term consultant assignment for a Swedish government agency with business-critical administrative systems and high requirements for security, reliability, and traceability. The assignment has involved several roles over time, covering system development, DevOps, application operations, and team coordination.
+        <br /><br />
+        <b>System Developer<br>
+        2019-ongoing</b>
+        <br />
+        Part of a cross-functional Scrum team responsible for developing and maintaining administrative systems used in business-critical case handling. The work covered the full technical stack, including database, backend, integrations, and frontend across systems of different generations.
+        Worked with technologies and concepts such as Entity Framework, REST APIs, WCF, NHibernate, and event-based communication. The assignment also included test automation through unit tests, integration tests, and end-to-end tests.
+        Contributed to internal knowledge sharing through training sessions and recurring developer forums focused on code quality, teamwork, policies, and continuous improvement.
+        <br /><br />
+        <b>DevOps / Application Operations<br />
+        2023-ongoing</b>
+        <br />
+        Part of the DevOps group with responsibility for application servers, including installation, operation, monitoring, and troubleshooting in a Windows-based environment. The work included CI/CD pipelines in Azure DevOps, as well as log and alarm management using Grafana and Seq.
+        Also involved in production-related installations and incident handling, sometimes outside regular working hours. The group worked proactively with monitoring, maintenance, and continuous improvements through regular coordination, shared responsibility, and rotating environment watch.
+        <br /><br />
+        <b>Acting Scrum Master / Team Coordinator<br />
+        March 2025-December 2025</b>
+        <br />
+        Temporarily took on the role of Scrum Master during a colleague's parental leave, with responsibility for planning, coordination, and representing the team in workplace forums. Supported the team by facilitating Scrum ceremonies, removing obstacles, onboarding and coaching team members, and helping maintain a steady delivery flow.`,
         icon: 'tabler:briefcase',
       },
       {
         title:
           'Software Developer <br /> <span class="font-normal">Briljant Eknomisystem AB</span> <br /> <span class="text-sm font-normal">2017 - 2019</span>',
-        description: `Assisted senior designers in creating design concepts and visual assets. <br /> Contributed to the development of brand identities and marketing collateral. <br /> Collaborated with the marketing team to ensure consistent design across campaigns. <br /> Gained hands-on experience in various design software and tools.`,
+        description: `Briljant develops an economic system used by small and medium-sized enterprises. <br />
+        Responsible for assigned functionality, covering design, development, support, and user training. Main focus was a mobile-adapted PWA for time reporting, developed largely in Angular. A key challenge was ensuring full offline support with reliable synchronization once the device came back online. Also worked on functionality for automatically importing invoices from email, as well as smaller bug fixes and miscellaneous development tasks.`,
         icon: 'tabler:briefcase',
       },
     ]}
@@ -124,7 +154,7 @@ const metadata = {
       {
         title: `Bachelor's Programme in Programming <br /> <span class="font-normal">Linköping University</span> <br /> <span class="text-sm font-normal">2014 - 2017</span>`,
         icon: 'tabler:school',
-      }
+      },
     ]}
     classes={{ container: 'max-w-3xl' }}
   />
@@ -133,224 +163,43 @@ const metadata = {
 
   <Features3
     title="Skills"
-    subtitle="Discover the proficiencies that allow me to bring imagination to life through design."
+    subtitle="A selection of technologies, tools, and methods I have worked with professionally across software development, testing, DevOps, and operations."
     columns={3}
     defaultIcon="tabler:point-filled"
     items={[
       {
-        title: 'Graphic design',
-        description: 'Proficient in crafting visually appealing designs that convey messages effectively.',
-      },
-      {
-        title: 'Branding and identity',
-        description: 'Skilled at developing cohesive brand identities, including logos and brand guidelines.',
-      },
-      {
-        title: 'User-centered design',
-        description: 'Experienced in creating user-friendly interfaces and optimizing user experiences.',
-      },
-      {
-        title: 'Adobe Creative Suite',
-        description: 'Skilled in using Photoshop, Illustrator, and InDesign to create and edit visual elements.',
-      },
-      {
-        title: 'Typography',
-        description: 'Adept in selecting and manipulating typefaces to enhance design aesthetics.',
-      },
-      {
-        title: 'Color theory',
-        description: 'Proficient in using color to evoke emotions and enhance visual harmony.',
-      },
-      {
-        title: 'Print and digital design',
-        description: 'Knowledgeable in designing for both print materials and digital platforms.',
-      },
-      {
-        title: 'Attention to detail',
-        description: 'Diligent in maintaining precision and quality in all design work.',
-      },
-      {
-        title: 'Adaptability',
-        description: 'Quick to adapt to new design trends, technologies, and client preferences.',
-      },
-    ]}
-  />
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    id="porfolio"
-    title="Elevating visual narratives"
-    subtitle="Embark on a design journey that surpasses pixels, entering a realm of imagination. Explore my portfolio, where passion and creativity converge to shape enthralling visual narratives."
-    isReversed
-    items={[
-      {
-        title: 'Description:',
+        title: 'Backend',
         description:
-          'Developed a comprehensive brand identity for a tech startup, Tech Innovators, specializing in disruptive innovations. The goal was to convey a modern yet approachable image that resonated with both corporate clients and tech enthusiasts.',
+          'C#, .NET, .NET Core, ASP.NET, Razor Pages, OData, Entity Framework, Fluent NHibernate, VB.NET, REST APIs, WCF, event-based communication',
       },
       {
-        title: 'Role:',
+        title: 'Frontend',
         description:
-          'Led the entire branding process from concept to execution. Created a dynamic logo that symbolized innovation, selected a vibrant color palette, and I designed corporate stationery, website graphics, and social media assets.',
+          'Angular, Blazor Server, Blazor WebAssembly, JavaScript, TypeScript, HTML, CSS, Sass, Bootstrap, PWA, Service Workers, responsive design',
       },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1658248165252-71e116af1b34?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80',
-      alt: 'Tech Design Image',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Go to the project',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Project 1: <br /><span class="text-2xl">Brand identity for tech innovators</span>
-      </h3>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent={true}
-    items={[
       {
-        title: 'Description:',
+        title: 'Database',
         description:
-          'Designed a captivating event poster for an art and music festival, "ArtWave Fusion," aiming to showcase the synergy between visual art and music genres.',
+          'SQL, Microsoft SQL Server, SQL Server Management Studio, database design, query optimization, data modeling',
       },
       {
-        title: 'Role:',
-        description: `Translated the festival's creative theme into a visually striking poster. Used bold typography, vibrant colors, and abstract elements to depict the fusion of art and music. Ensured the design captured the festival's vibrant atmosphere.`,
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1619983081563-430f63602796?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-      alt: 'Art and Music Poster Image',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Go to the project',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Project 2: <br /><span class="text-2xl">Event poster for art & music festival</span>
-      </h3>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent={true}
-    items={[
-      {
-        title: 'Description:',
-        description: `Redesigned the e-commerce website for an eco-conscious fashion brand, GreenVogue. The objective was to align the brand's online presence with its sustainable ethos and improve user experience.`,
+        title: 'DevOps & Operations',
+        description:
+          'Azure DevOps, CI/CD, Microsoft Azure, IIS, Windows Server, Linux, PowerShell, Grafana, Seq, log management, monitoring, incident handling',
       },
       {
-        title: 'Role:',
-        description: `Conducted a thorough analysis of the brand's values and customer base to inform the design direction. Created a visually appealing interface with intuitive navigation, highlighting sustainable materials, and integrating a user-friendly shopping experience.`,
-      },
-    ]}
-    image={{
-      src: 'https://plus.unsplash.com/premium_photo-1683288295841-782fa47e4770?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
-      alt: 'Fashion e-commerce Image',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Go to the project',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Project 3: <br /><span class="text-2xl">E-commerce website redesign for fashion brand</span>
-      </h3>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Testimonials Widget *********** -->
-
-  <Testimonials
-    title="Client testimonials"
-    subtitle="Discover what clients have to say about their experiences working with me."
-    testimonials={[
-      {
-        testimonial: `She took our vague concept and turned it into a visual masterpiece that perfectly aligned with our goals. Her attention to detail and ability to translate ideas into compelling visuals exceeded our expectations.`,
-        name: 'Mark Thompson',
-        job: 'Creative director',
-        image: {
-          src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-          alt: 'Mark Thompson Image',
-        },
+        title: 'Testing & Automation',
+        description:
+          'Playwright, Reqnroll, SpecFlow, FluentAssertions, test automation, unit testing, integration testing, end-to-end testing',
       },
       {
-        testimonial: `She transformed our brand identity with her creative finesse, capturing our essence in every element. Her dedication and talent truly shine through her work.`,
-        name: 'Emily Martinez',
-        job: 'CEO',
-        image: {
-          src: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=772&q=80',
-          alt: 'Emily Martinez Image',
-        },
+        title: 'Tools',
+        description: 'Git, SVN, Visual Studio, JetBrains Rider, ReSharper, Webpack',
       },
       {
-        testimonial: `She has an uncanny ability to communicate emotions and stories. She crafted a logo for our NGO that not only represents our cause but also evokes empathy. Her professionalism and commitment make her a designer of exceptional caliber.`,
-        name: 'Laura Simmons',
-        job: 'Founder of an NGO',
-        image: {
-          src: 'https://images.unsplash.com/photo-1554727242-741c14fa561c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-          alt: 'Laura Simmons Image',
-        },
-      },
-      {
-        testimonial: `We entrusted Sarah with revamping our website's user interface, and the results were astounding. Her intuitive design sense enhanced user experience, leading to a significant increase in engagement. She's a designer who truly understands the synergy of aesthetics and functionality.`,
-        name: 'Alex Foster',
-        job: 'Director of web services',
-        image: {
-          src: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-          alt: 'Alex Foster Image',
-        },
-      },
-      {
-        testimonial: `She took our vision and elevated it beyond imagination. Her ability to capture brand essence and translate it into design is nothing short of remarkable. Working with her has been an inspiring journey.`,
-        name: 'Jessica Collins',
-        job: 'Product Manager',
-        image: {
-          src: 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=778&q=80',
-          alt: 'Jessica Collins Image',
-        },
-      },
-      {
-        testimonial: `Her ability to transform concepts into captivating visuals is nothing short of extraordinary. She took our event poster idea and turned it into a visual masterpiece that perfectly captured the essence of our festival. Sarah's dedication, creativity, and knack for delivering beyond expectations make her an invaluable asset to any project.`,
-        name: 'Michael Carter',
-        job: 'Event Coordinator',
-        image: {
-          src: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-          alt: 'Michael Carter Image',
-        },
+        title: 'Ways of Working',
+        description:
+          'Scrum, Agile development, DevOps, cross-functional teams, technical responsibility, support, troubleshooting, onboarding, user training, internal knowledge sharing, developer forums, continuous improvement',
       },
     ]}
   />
@@ -358,13 +207,13 @@ const metadata = {
   <!-- CallToAction Widget *********** -->
 
   <CallToAction
-    title="Let's create together"
-    subtitle="Ready to transform your vision into captivating designs?"
+    title="Want to talk code?"
+    subtitle="Open to conversations about software development, collaboration, and interesting technical challenges."
     actions={[
       {
         variant: 'primary',
-        text: 'Hire me',
-        href: '/',
+        text: 'Contact me',
+        href: getPermalink('/contact#form'),
       },
     ]}
   />
@@ -373,8 +222,8 @@ const metadata = {
 
   <BlogLatestPosts
     id="blog"
-    title="Explore my insightful articles on my blog"
-    information={`Dive into a realm of design wisdom and creative inspiration, where you'll find invaluable insights, practical tips, and captivating narratives that elevate and enrich your creative journey.`}
+    title="Recent entries from the archive"
+    information={`Dive into my collection of technical notes, field reports, and lessons worth keeping. Gathered from the many paths between code, databases, and deployments.`}
   >
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
