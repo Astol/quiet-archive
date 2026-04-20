@@ -82,9 +82,9 @@ const getNormalizedPostFromAPI = async (post: any): Promise<Post> => {
   }));
 
   return {
-    id: id || slug,
-    slug: cleanSlug(slug),
-    permalink: await generatePermalink({ id: id || slug, slug: cleanSlug(slug), publishDate, category: category?.slug }),
+    id: id,
+    slug: slug,
+    permalink: await generatePermalink({ id, slug, publishDate, category: category?.slug }),
 
     publishDate: publishDate,
     updateDate: updateDate,
