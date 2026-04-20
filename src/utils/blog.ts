@@ -1,9 +1,17 @@
 import type { PaginateFunction } from 'astro';
-import { getCollection, render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, trimSlash, BLOG_BASE, POST_PERMALINK_PATTERN, CATEGORY_BASE, TAG_BASE } from './permalinks';
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error('Missing Supabase public env variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY must be set.');
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const generatePermalink = async ({
   id,
@@ -40,24 +48,24 @@ const generatePermalink = async ({
     .join('/');
 };
 
-const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> => {
-  const { id, data } = post;
-  const { Content, remarkPluginFrontmatter } = await render(post);
-
+const getNormalizedPostFromAPI = async (post: any): Promise<Post> => {
   const {
-    publishDate: rawPublishDate = new Date(),
-    updateDate: rawUpdateDate,
+    id,
+    slug,
     title,
     excerpt,
+    content,
+    publishDate: rawPublishDate = new Date(),
+    updateDate: rawUpdateDate,
     image,
     tags: rawTags = [],
     category: rawCategory,
     author,
     draft = false,
     metadata = {},
-  } = data;
+    readingTime,
+  } = post;
 
-  const slug = cleanSlug(id); // cleanSlug(rawSlug.split('/').pop());
   const publishDate = new Date(rawPublishDate);
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
@@ -74,9 +82,9 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   }));
 
   return {
-    id: id,
-    slug: slug,
-    permalink: await generatePermalink({ id, slug, publishDate, category: category?.slug }),
+    id: id || slug,
+    slug: cleanSlug(slug),
+    permalink: await generatePermalink({ id: id || slug, slug: cleanSlug(slug), publishDate, category: category?.slug }),
 
     publishDate: publishDate,
     updateDate: updateDate,
@@ -93,22 +101,39 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
 
     metadata,
 
-    Content: Content,
-    // or 'content' in case you consume from API
-
-    readingTime: remarkPluginFrontmatter?.readingTime,
+    content: content, // Use content string instead of Content component
+    readingTime: readingTime,
   };
 };
 
 const load = async function (): Promise<Array<Post>> {
-  const posts = await getCollection('post');
-  const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post));
+  try {
+    // Fetch posts from external API
+    const { data: posts, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('draft', false)
+    .order('created_at', { ascending: false });
 
-  const results = (await Promise.all(normalizedPosts))
-    .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
-    .filter((post) => !post.draft);
+    if (error) {
+      throw new Error(`Supabase query failed: ${error.message}`);
+    }
 
-  return results;
+    if (!posts) {
+      return [];
+    }
+    
+    // Normalize posts to match Post interface
+    const normalizedPosts = posts.map(async (post: any) => await getNormalizedPostFromAPI(post));
+    const results = (await Promise.all(normalizedPosts))
+      .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf());
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch posts from external API:', error);
+    // Return empty array as fallback
+    return [];
+  }
 };
 
 let _posts: Array<Post>;

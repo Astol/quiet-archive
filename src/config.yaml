@@ -10,22 +10,18 @@ site:
 metadata:
   title:
     default: Quiet Archive
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    template: '%s — Quiet Archive'
+  description: "\U0001F640 A personal blog and portfolio site."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: Quiet Archive
     images:
       - url: '~/assets/images/default.png'
         width: 1200
         height: 628
     type: website
-  twitter:
-    handle: '@arthelokyo'
-    site: '@arthelokyo'
-    cardType: summary_large_image
 
 i18n:
   language: en

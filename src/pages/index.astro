@@ -1,7 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
-import Header from '~/components/widgets/Header.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
@@ -11,30 +10,12 @@ import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import { getPermalink } from '~/utils/permalinks';
 
 const metadata = {
-  title: 'Personal Homepage Demo',
+  title: 'Home',
 };
 ---
 
 <Layout metadata={metadata}>
   <Fragment slot="announcement"></Fragment>
-  <Fragment slot="header">
-    <Header
-      links={[
-        { text: 'Home', href: '#' },
-        { text: 'About', href: '/#about' },
-        { text: 'Blog', href: '/blog' },
-        { text: 'Github', href: 'https://github.com/Astol' },
-      ]}
-      actions={[
-        {
-          text: 'Contact me',
-          href: getPermalink('/contact#form'),
-        },
-      ]}
-      isSticky
-      showToggleTheme
-    />
-  </Fragment>
 
   <!-- Hero2 Widget ******************* -->
 
@@ -95,7 +76,7 @@ const metadata = {
       <br />
       <p>
         Quiet Archive is my little corner for projects, notes, experiments, and lessons gathered from the road. If
-        you’re curious to follow the trail, you can find me here:
+        you're curious to follow the trail, you can find me here:
       </p>
     </Fragment>
 
@@ -169,35 +150,42 @@ const metadata = {
     items={[
       {
         title: 'Backend',
+        icon: 'tabler:server',
         description:
           'C#, .NET, .NET Core, ASP.NET, Razor Pages, OData, Entity Framework, Fluent NHibernate, VB.NET, REST APIs, WCF, event-based communication',
       },
       {
         title: 'Frontend',
+        icon: 'tabler:device-desktop',
         description:
           'Angular, Blazor Server, Blazor WebAssembly, JavaScript, TypeScript, HTML, CSS, Sass, Bootstrap, PWA, Service Workers, responsive design',
       },
       {
         title: 'Database',
+        icon: 'tabler:database',
         description:
           'SQL, Microsoft SQL Server, SQL Server Management Studio, database design, query optimization, data modeling',
       },
       {
         title: 'DevOps & Operations',
+        icon: 'tabler:settings',
         description:
           'Azure DevOps, CI/CD, Microsoft Azure, IIS, Windows Server, Linux, PowerShell, Grafana, Seq, log management, monitoring, incident handling',
       },
       {
         title: 'Testing & Automation',
+        icon: 'tabler:checklist',
         description:
           'Playwright, Reqnroll, SpecFlow, FluentAssertions, test automation, unit testing, integration testing, end-to-end testing',
       },
       {
         title: 'Tools',
+        icon: 'tabler:tool',
         description: 'Git, SVN, Visual Studio, JetBrains Rider, ReSharper, Webpack',
       },
       {
         title: 'Ways of Working',
+        icon: 'tabler:users',
         description:
           'Scrum, Agile development, DevOps, cross-functional teams, technical responsibility, support, troubleshooting, onboarding, user training, internal knowledge sharing, developer forums, continuous improvement',
       },
