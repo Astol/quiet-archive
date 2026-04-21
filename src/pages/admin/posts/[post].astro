@@ -1,6 +1,13 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
+export async function getStaticPaths() {
+  return [
+    { params: { post: 'example-post-id' } },
+    // add one entry per dynamic route you want to build
+  ];
+}
+
 const { post } = Astro.params;
 
 const metadata = {
