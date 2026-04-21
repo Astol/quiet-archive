@@ -3,12 +3,15 @@ import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, trimSlash, BLOG_BASE, POST_PERMALINK_PATTERN, CATEGORY_BASE, TAG_BASE } from './permalinks';
 import { createClient } from '@supabase/supabase-js';
+import type { ExternalPost } from '~/types';
 
 const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error('Missing Supabase public env variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY must be set.');
+  throw new Error(
+    'Missing Supabase public env variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY must be set.'
+  );
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -48,7 +51,7 @@ const generatePermalink = async ({
     .join('/');
 };
 
-const getNormalizedPostFromAPI = async (post: any): Promise<Post> => {
+const getNormalizedPostFromAPI = async (post: ExternalPost): Promise<Post> => {
   const {
     id,
     slug,
@@ -110,10 +113,10 @@ const load = async function (): Promise<Array<Post>> {
   try {
     // Fetch posts from external API
     const { data: posts, error } = await supabase
-    .from('posts')
-    .select('*')
-    .eq('draft', false)
-    .order('created_at', { ascending: false });
+      .from('posts')
+      .select('*')
+      .eq('draft', false)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Supabase query failed: ${error.message}`);
@@ -122,11 +125,12 @@ const load = async function (): Promise<Array<Post>> {
     if (!posts) {
       return [];
     }
-    
+
     // Normalize posts to match Post interface
-    const normalizedPosts = posts.map(async (post: any) => await getNormalizedPostFromAPI(post));
-    const results = (await Promise.all(normalizedPosts))
-      .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf());
+    const normalizedPosts = posts.map(async (post: ExternalPost) => await getNormalizedPostFromAPI(post));
+    const results = (await Promise.all(normalizedPosts)).sort(
+      (a, b) => b.publishDate.valueOf() - a.publishDate.valueOf()
+    );
 
     return results;
   } catch (error) {

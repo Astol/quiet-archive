@@ -44,6 +44,23 @@ export interface Post {
   readingTime?: number;
 }
 
+export type ExternalPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  publishDate?: string | Date;
+  updateDate?: string | Date;
+  image?: string;
+  tags?: string[];
+  category?: string;
+  author?: string;
+  draft?: boolean;
+  metadata?: Record<string, unknown>;
+  readingTime?: number;
+};
+
 export interface Taxonomy {
   slug: string;
   title: string;
