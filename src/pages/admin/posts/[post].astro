@@ -1,0 +1,13 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const { post } = Astro.params;
+
+const metadata = {
+  title: `Blog post ${post}`,
+};
+---
+
+<Layout metadata={metadata}>
+  <p>Post id: {post}</p>
+</Layout>

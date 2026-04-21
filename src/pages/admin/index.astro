@@ -1,0 +1,82 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+
+const metadata = {
+  title: 'Admin',
+};
+
+const {
+  title = 'If I must fall, I will rise each time a better man',
+  subtitle = "Failure is the mark of a life well lived. In turn, the only way to live without failure is to be of no use to anyone. Trust me, I've practiced.",
+  tagline = 'Journey before destination.',
+} = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <Hero
+    id="adm-hero"
+    title={title}
+    tagline={tagline}
+    actions={[{ variant: 'primary', text: 'Sign out', id: 'sign-out' }]}
+  >
+    <Fragment slot="subtitle">{subtitle}</Fragment>
+  </Hero>
+
+  <Features2
+    tagline="Administration"
+    title="Manage the system"
+    subtitle="Quick access to all the tools you need."
+    items={[
+      {
+        title: 'New post',
+        icon: 'tabler:plus',
+        callToAction: { text: 'Create post', href: '/admin/posts/new' },
+        description: 'Create a new blog post and publish it to your website.',
+      },
+      {
+        title: 'Blog posts',
+        icon: 'tabler:article',
+        callToAction: { text: 'Go to posts', href: '/admin/posts' },
+        description: `Show all blog posts, even unpublished ones, and edit or delete existing posts.`,
+      },
+      {
+        title: 'Create Wiki Page',
+        icon: 'tabler:brain',
+        callToAction: { text: 'Create page', href: '#' },
+        description: `Create a new wiki page for your documentation.`,
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Features2>
+</Layout>
+
+<p id="admin-status" class="mx-auto max-w-3xl text-xs opacity-75">Checking access...</p>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_ANON_KEY);
+
+  const statusEl = document.querySelector('#admin-status') as HTMLParagraphElement;
+  const contentEl = document.querySelector('#admin-content') as HTMLDivElement;
+  const signOutButton = document.querySelector('#sign-out') as HTMLButtonElement;
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data.user) {
+    window.location.href = '/admin/login';
+  } else {
+    statusEl.textContent = `Signed in as ${data.user.email}`;
+    contentEl.classList.remove('hidden');
+  }
+
+  signOutButton.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/admin/login';
+  });
+</script>

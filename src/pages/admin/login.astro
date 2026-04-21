@@ -1,0 +1,27 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import LoginForm from '~/components/admin/Login.astro';
+
+const metadata = {
+  title: 'Login',
+};
+---
+
+<Layout metadata={metadata}>
+  <LoginForm
+    title="Good to see you again"
+    subtitle="Log in and let's get you back on track."
+    inputs={[
+      {
+        type: 'email',
+        name: 'email',
+        label: 'Email',
+      },
+      {
+        type: 'password',
+        name: 'password',
+        label: 'Password',
+      },
+    ]}
+  />
+</Layout>

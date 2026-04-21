@@ -1,13 +1,14 @@
 ---
 import { SITE } from 'astrowind:config';
-import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import favIcon32 from '~/assets/favicons/favicon-32x32.png';
 ---
 
 <span
   class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white"
 >
   <span class="flex items-center gap-2">
-    <Icon name="tabler:book-2" class="w-5 h-5" />
+    <Image src={favIcon32} alt="Logo" width={32} height={32} class="rounded-sm" />
     <span>{SITE?.name}</span>
   </span>
 </span>

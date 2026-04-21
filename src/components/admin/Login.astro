@@ -1,0 +1,72 @@
+---
+import FormContainer from '~/components/ui/Form.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import type { Contact as Props } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  inputs,
+  textarea,
+  disclaimer,
+  button = 'Log in',
+  description,
+
+  id = 'login-wrapper',
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} class:list={'mt-10'} />
+
+  {
+    inputs && (
+      <div class="flex flex-col max-w-xl mx-auto rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow p-4 sm:p-6 lg:p-8 w-full">
+        <FormContainer
+          id="login-form"
+          inputs={inputs}
+          textarea={textarea}
+          disclaimer={disclaimer}
+          button={button}
+          description={description}
+        />
+        <p id="login-error" class="mt-4 text-sm text-red-600" />
+      </div>
+    )
+  }
+</WidgetWrapper>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_ANON_KEY);
+
+  const form = document.querySelector('#login-form') as HTMLFormElement;
+  const errorEl = document.querySelector('#login-error') as HTMLParagraphElement;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    errorEl.textContent = '';
+
+    const formData = new FormData(form);
+    const email = String(formData.get('email'));
+    const password = String(formData.get('password'));
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      errorEl.textContent = error.message;
+      return;
+    }
+
+    window.location.href = '/admin';
+  });
+</script>

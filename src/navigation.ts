@@ -23,17 +23,13 @@ export const headerData = {
 };
 
 export const footerData = {
-  links: [
-    {
-      title: 'Explore',
-      links: [
-        { text: 'Home', href: '#' },
-        { text: 'About', href: '/#about' },
-        { text: 'Blog', href: '/#blog' },
-      ],
-    },
+  links: [],
+  secondaryLinks: [
+    { text: 'Home', href: '/#' },
+    { text: 'About', href: '/#about' },
+    { text: 'Blog', href: '/#blog' },
+    { text: 'Privacy Policy', href: getPermalink('/privacy') },
   ],
-  secondaryLinks: [{ text: 'Privacy Policy', href: getPermalink('/privacy') }],
   socialLinks: [
     {
       ariaLabel: 'LinkedIn',
