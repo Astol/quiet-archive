@@ -1,0 +1,212 @@
+---
+import FormContainer from '~/components/ui/Form.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import type { PostProps as Props } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  editMode,
+  inputs,
+  textarea,
+  disclaimer,
+  description,
+  button = 'Create Post',
+
+  id = 'post-form-wrapper',
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`}
+  bg={bg}
+  data-edit-mode={editMode}
+>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+  {
+    inputs && (
+      <div class="flex flex-col w-full max-w-none rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow p-4 sm:p-6 lg:p-8">
+        <FormContainer
+          id="post-form"
+          inputs={inputs}
+          textarea={textarea}
+          disclaimer={disclaimer}
+          button={button}
+          description={description}
+        />
+        <p id="form-error" class="mt-4 text-sm text-red-600" />
+      </div>
+    )
+  }
+</WidgetWrapper>
+
+<script>
+  import { getSupabaseBrowserClient } from '~/lib/supabase/browser';
+
+  const supabase = getSupabaseBrowserClient();
+
+  // Get props from data attribute
+  const wrapper = document.querySelector('#post-form-wrapper') as HTMLElement | null;
+  const editMode = wrapper?.dataset?.editMode === 'true';
+  const postId = new URLSearchParams(window.location.search).get('id');
+  console.log('Edit mode:', editMode, 'Post ID:', postId);
+  // Update button text based on mode
+  const submitBtn = document.querySelector('#post-form button[type="submit"]') as HTMLButtonElement | null;
+  if (submitBtn) {
+    submitBtn.textContent = editMode ? 'Update Post' : 'Create Post';
+  }
+
+  // Check for authenticated session
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    window.location.href = '/admin/login';
+  }
+
+  const errorEl = document.querySelector('#form-error') as HTMLParagraphElement;
+
+  // If in edit mode, fetch existing post data
+  if (editMode) {
+    if (!postId) {
+      errorEl.textContent = 'Missing post id.';
+      throw new Error('Missing post id');
+    }
+
+    const { data: post, error: fetchError } = await supabase.from('posts').select('*').eq('id', postId).single();
+
+    if (fetchError) {
+      console.error('Failed to load post:', fetchError);
+      window.location.href = '/admin';
+    }
+
+    // Populate form fields
+    if (post) {
+      const setValue = (id: string, value: string | undefined) => {
+        const el = document.querySelector(`[name="${id}"]`) as HTMLInputElement | HTMLTextAreaElement | null;
+        if (el) el.value = value || '';
+      };
+
+      setValue('Title', post.title);
+      setValue('Slug', post.slug);
+      setValue('Category', post.category);
+      setValue('Tags', post.tags?.join(', ') || '');
+      setValue('Cover Image URL', post.cover_image_url);
+      setValue('Excerpt', post.excerpt);
+      setValue('Body Markdown', post.body_markdown);
+
+      // Set published checkbox
+      const publishedCheck = document.querySelector('[name="Published"]') as HTMLInputElement;
+      if (publishedCheck) publishedCheck.checked = post.status === 'published';
+    }
+  }
+
+  const form = document.querySelector('#post-form') as HTMLFormElement;
+
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (errorEl) {
+        errorEl.textContent = '';
+      }
+
+      const formData = new FormData(form);
+      const title = String(formData.get('Title') ?? '').trim();
+      const slug = String(formData.get('Slug') ?? '').trim();
+      const category = String(formData.get('Category') ?? '').trim();
+      const tags = String(formData.get('Tags') ?? '')
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+      const image = String(formData.get('Cover Image URL') ?? '').trim();
+      const excerpt = String(formData.get('Excerpt') ?? '').trim();
+      const content = String(formData.get('Body Markdown') ?? '').trim();
+      const published = formData.get('Published') === 'on';
+
+      if (!title || !slug || !content) {
+        if (errorEl) {
+          errorEl.textContent = 'Title, Slug, and Body Markdown are required.';
+        }
+        return;
+      }
+
+      console.log('Submitting post:', {
+        title,
+        slug,
+        category,
+        tags,
+        image,
+        excerpt,
+        status: published ? 'published' : 'draft',
+      });
+
+      let error;
+      if (editMode && postId) {
+        // Update existing post
+        const result = await supabase
+          .from('posts')
+          .update({
+            title,
+            slug,
+            category: category || null,
+            tags: tags.length ? tags : null,
+            cover_image_url: image || null,
+            excerpt: excerpt || null,
+            body_markdown: content || null,
+            status: published ? 'published' : 'draft',
+            published_at: published ? new Date().toISOString() : null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', postId);
+        error = result.error;
+      } else {
+        // Insert new post
+        const result = await supabase.from('posts').insert([
+          {
+            title,
+            slug,
+            category: category || null,
+            tags: tags.length ? tags : null,
+            cover_image_url: image || null,
+            excerpt: excerpt || null,
+            body_markdown: content || null,
+            status: published ? 'published' : 'draft',
+            published_at: published ? new Date().toISOString() : null,
+          },
+        ]);
+        error = result.error;
+      }
+
+      console.log('Submit result:', { error });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        if (errorEl) {
+          errorEl.textContent = error.message;
+        }
+        return;
+      }
+
+      const actionText = editMode ? 'Post updated!' : 'Post created!';
+      if (errorEl) {
+        errorEl.classList.remove('text-red-600');
+        errorEl.classList.add('text-green-600');
+        errorEl.textContent = actionText + ' Redirecting...';
+      }
+
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 1500);
+    });
+  }
+</script>

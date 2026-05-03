@@ -3,7 +3,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import PostForm from '~/components/admin/PostForm.astro';
 
 const metadata = {
-  title: 'New Blog Post',
+  title: 'Edit Blog Post',
 };
 ---
 
@@ -11,9 +11,10 @@ const metadata = {
   <section class="mx-auto max-w-3xl">
     <a href="/admin">Back to Admin</a>
   </section>
+
   <PostForm
-    title="New Blog Post"
-    subtitle="Create a new blog post and publish it to your website."
+    title="Edit Blog Post"
+    editMode={true}
     textarea={{
       name: 'Body Markdown',
       label: 'Body Markdown',

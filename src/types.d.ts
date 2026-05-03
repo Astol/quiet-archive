@@ -49,14 +49,14 @@ export type ExternalPost = {
   slug: string;
   title: string;
   excerpt?: string;
-  content?: string;
+  body_markdown?: string;
   publishDate?: string | Date;
   updateDate?: string | Date;
-  image?: string;
+  cover_image_url?: string;
   tags?: string[];
   category?: string;
   author?: string;
-  draft?: boolean;
+  status?: string;
   metadata?: Record<string, unknown>;
   readingTime?: number;
 };
@@ -297,3 +297,7 @@ export interface Content extends Omit<Headline, 'classes'>, Widget {
 }
 
 export interface Contact extends Omit<Headline, 'classes'>, Form, Widget {}
+
+export interface PostProps extends Omit<Headline, 'classes'>, Form, Widget {
+  editMode?: boolean;
+}

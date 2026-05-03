@@ -58,12 +58,11 @@ const {
 <p id="admin-status" class="mx-auto max-w-3xl text-xs opacity-75">Checking access...</p>
 
 <script>
-  import { createClient } from '@supabase/supabase-js';
+  import { getSupabaseBrowserClient } from '~/lib/supabase/browser';
 
-  const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = getSupabaseBrowserClient();
 
   const statusEl = document.querySelector('#admin-status') as HTMLParagraphElement;
-  const contentEl = document.querySelector('#admin-content') as HTMLDivElement;
   const signOutButton = document.querySelector('#sign-out') as HTMLButtonElement;
 
   const { data, error } = await supabase.auth.getUser();
@@ -72,7 +71,6 @@ const {
     window.location.href = '/admin/login';
   } else {
     statusEl.textContent = `Signed in as ${data.user.email}`;
-    contentEl.classList.remove('hidden');
   }
 
   signOutButton.addEventListener('click', async () => {

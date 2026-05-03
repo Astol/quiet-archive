@@ -2,19 +2,10 @@ import type { PaginateFunction } from 'astro';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, trimSlash, BLOG_BASE, POST_PERMALINK_PATTERN, CATEGORY_BASE, TAG_BASE } from './permalinks';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseBuild } from '~/lib/supabase/build';
 import type { ExternalPost } from '~/types';
 
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error(
-    'Missing Supabase public env variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY must be set.'
-  );
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabaseBuild;
 
 const generatePermalink = async ({
   id,
@@ -57,19 +48,19 @@ const getNormalizedPostFromAPI = async (post: ExternalPost): Promise<Post> => {
     slug,
     title,
     excerpt,
-    content,
+    body_markdown: content,
     publishDate: rawPublishDate = new Date(),
     updateDate: rawUpdateDate,
-    image,
+    cover_image_url: image,
     tags: rawTags = [],
     category: rawCategory,
-    author,
-    draft = false,
+    author = 'Alexander Stolpe',
+    status = 'draft',
     metadata = {},
     readingTime,
   } = post;
 
-  const publishDate = new Date(rawPublishDate);
+  const publishDate = rawPublishDate ? new Date(rawPublishDate) : new Date();
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
   const category = rawCategory
@@ -100,11 +91,11 @@ const getNormalizedPostFromAPI = async (post: ExternalPost): Promise<Post> => {
     tags: tags,
     author: author,
 
-    draft: draft,
+    draft: status === 'published',
 
     metadata,
 
-    content: content, // Use content string instead of Content component
+    content: content,
     readingTime: readingTime,
   };
 };
@@ -115,7 +106,7 @@ const load = async function (): Promise<Array<Post>> {
     const { data: posts, error } = await supabase
       .from('posts')
       .select('*')
-      .eq('draft', false)
+      .eq('status', 'published')
       .order('created_at', { ascending: false });
 
     if (error) {
