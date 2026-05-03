@@ -3,6 +3,10 @@ import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
   title: 'Blog Posts',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 ---
 
@@ -68,9 +72,9 @@ const metadata = {
   let isLoading = false;
 
   function getElements() {
-    const status = document.querySelector('#status');
-    const table = document.querySelector('#posts-table');
-    const tbody = document.querySelector('#posts-body');
+    const status = document.querySelector<HTMLParagraphElement>('#status');
+    const table = document.querySelector<HTMLTableElement>('#posts-table');
+    const tbody = document.querySelector<HTMLTableSectionElement>('#posts-body');
 
     if (!status || !table || !tbody) {
       return null;
@@ -184,7 +188,7 @@ const metadata = {
     }
   }
 
-  async function handleDeleteClick(event) {
+  async function handleDeleteClick(event: MouseEvent) {
     const elements = getElements();
 
     if (!elements) {
@@ -222,7 +226,7 @@ const metadata = {
     button.disabled = true;
     status.textContent = 'Deleting post…';
 
-    const { error } = await supabase.from('posts').delete().eq('id', id);
+    const { error } = await supabase.from('posts').update({ status: 'archived' }).eq('id', id);
 
     if (error) {
       button.disabled = false;
@@ -234,7 +238,7 @@ const metadata = {
     await loadPosts();
   }
 
-  function formatDate(value) {
+  function formatDate(value: string | null | undefined) {
     if (!value) {
       return '';
     }
@@ -242,7 +246,7 @@ const metadata = {
     return new Date(value).toLocaleString();
   }
 
-  function escapeHtml(value) {
+  function escapeHtml(value: string | number | null | undefined) {
     return String(value)
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')

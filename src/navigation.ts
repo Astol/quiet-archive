@@ -12,7 +12,7 @@ export const headerData = {
     },
     {
       text: 'Blog',
-      href: '/blog',
+      href: '/#blog',
     },
     {
       text: 'Github',
@@ -23,21 +23,30 @@ export const headerData = {
 };
 
 export const footerData = {
-  links: [],
+  links: [
+    {
+      title: 'Quiet Archive',
+      links: [
+        { text: 'Home', href: '/#' },
+        { text: 'About', href: '/#about' },
+        { text: 'Blog', href: '/#blog' },
+      ]
+    },
+    {
+      title: 'Elsewhere',
+      links: [
+        { text: 'LinkedIn', href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a' },
+        { text: 'Github', href: 'https://github.com/Astol' },
+      ]
+    }
+  ],
   secondaryLinks: [
-    { text: 'Home', href: '/#' },
-    { text: 'About', href: '/#about' },
-    { text: 'Blog', href: '/#blog' },
     { text: 'Privacy Policy', href: getPermalink('/privacy') },
   ],
   socialLinks: [
-    {
-      ariaLabel: 'LinkedIn',
-      icon: 'tabler:brand-linkedin',
-      href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a',
-    },
-    { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
+    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a' },
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/Astol' },
+    { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
   ],
   footNote: `
     Made by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/Astol"> Astol</a> · All rights reserved.

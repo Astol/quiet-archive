@@ -91,7 +91,7 @@ const getNormalizedPostFromAPI = async (post: ExternalPost): Promise<Post> => {
     tags: tags,
     author: author,
 
-    draft: status === 'published',
+    draft: status !== 'published',
 
     metadata,
 
