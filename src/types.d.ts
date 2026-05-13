@@ -21,7 +21,7 @@ export interface Post {
   /** Optional summary of post content. */
   excerpt?: string;
   /**  */
-  image?: ImageMetadata | string;
+  cover_image_url?: ImageMetadata | string;
 
   /**  */
   category?: Taxonomy;
@@ -43,23 +43,6 @@ export interface Post {
   /**  */
   readingTime?: number;
 }
-
-export type ExternalPost = {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt?: string;
-  body_markdown?: string;
-  publishDate?: string | Date;
-  updateDate?: string | Date;
-  cover_image_url?: string;
-  tags?: string[];
-  category?: string;
-  author?: string;
-  status?: string;
-  metadata?: Record<string, unknown>;
-  readingTime?: number;
-};
 
 export interface Taxonomy {
   slug: string;

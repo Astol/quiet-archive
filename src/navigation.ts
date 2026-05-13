@@ -30,21 +30,23 @@ export const footerData = {
         { text: 'Home', href: '/#' },
         { text: 'About', href: '/#about' },
         { text: 'Blog', href: '/#blog' },
-      ]
+      ],
     },
     {
       title: 'Elsewhere',
       links: [
         { text: 'LinkedIn', href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a' },
         { text: 'Github', href: 'https://github.com/Astol' },
-      ]
-    }
+      ],
+    },
   ],
-  secondaryLinks: [
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
-  ],
+  secondaryLinks: [{ text: 'Privacy Policy', href: getPermalink('/privacy') }],
   socialLinks: [
-    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a' },
+    {
+      ariaLabel: 'LinkedIn',
+      icon: 'tabler:brand-linkedin',
+      href: 'https://www.linkedin.com/in/alexander-stolpe-65136a13a',
+    },
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/Astol' },
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
   ],

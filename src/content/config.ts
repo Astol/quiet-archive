@@ -1,5 +1,5 @@
 import { z, defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { supabasePostsLoader, supabasePostSchema } from '~/lib/supabase/postLoader';
 
 const metadataDefinition = () =>
   z
@@ -47,20 +47,8 @@ const metadataDefinition = () =>
     .optional();
 
 const postCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
-  schema: z.object({
-    publishDate: z.date().optional(),
-    updateDate: z.date().optional(),
-    draft: z.boolean().optional(),
-
-    title: z.string(),
-    excerpt: z.string().optional(),
-    image: z.string().optional(),
-
-    category: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    author: z.string().optional(),
-
+  loader: supabasePostsLoader(),
+  schema: supabasePostSchema.extend({
     metadata: metadataDefinition(),
   }),
 });

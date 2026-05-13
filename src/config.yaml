@@ -1,6 +1,6 @@
 site:
   name: Quiet Archive
-  site: 'https://astrowind.vercel.app'
+  site: 'https://quiet-archive.pages.dev'
   base: '/'
   trailingSlash: false
 

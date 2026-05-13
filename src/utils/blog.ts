@@ -1,11 +1,8 @@
 import type { PaginateFunction } from 'astro';
 import type { Post } from '~/types';
+import { getCollection } from 'astro:content';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, trimSlash, BLOG_BASE, POST_PERMALINK_PATTERN, CATEGORY_BASE, TAG_BASE } from './permalinks';
-import { supabaseBuild } from '~/lib/supabase/build';
-import type { ExternalPost } from '~/types';
-
-const supabase = supabaseBuild;
 
 const generatePermalink = async ({
   id,
@@ -15,15 +12,15 @@ const generatePermalink = async ({
 }: {
   id: string;
   slug: string;
-  publishDate: Date;
-  category: string | undefined;
+  publishDate?: Date;
+  category?: string;
 }) => {
-  const year = String(publishDate.getFullYear()).padStart(4, '0');
-  const month = String(publishDate.getMonth() + 1).padStart(2, '0');
-  const day = String(publishDate.getDate()).padStart(2, '0');
-  const hour = String(publishDate.getHours()).padStart(2, '0');
-  const minute = String(publishDate.getMinutes()).padStart(2, '0');
-  const second = String(publishDate.getSeconds()).padStart(2, '0');
+  const year = String(publishDate?.getFullYear()).padStart(4, '0');
+  const month = String((publishDate?.getMonth() ?? 0) + 1).padStart(2, '0');
+  const day = String(publishDate?.getDate()).padStart(2, '0');
+  const hour = String(publishDate?.getHours()).padStart(2, '0');
+  const minute = String(publishDate?.getMinutes()).padStart(2, '0');
+  const second = String(publishDate?.getSeconds()).padStart(2, '0');
 
   const permalink = POST_PERMALINK_PATTERN.replace('%slug%', slug)
     .replace('%id%', id)
@@ -38,100 +35,47 @@ const generatePermalink = async ({
   return permalink
     .split('/')
     .map((el) => trimSlash(el))
-    .filter((el) => !!el)
+    .filter(Boolean)
     .join('/');
 };
 
-const getNormalizedPostFromAPI = async (post: ExternalPost): Promise<Post> => {
-  const {
-    id,
-    slug,
-    title,
-    excerpt,
-    body_markdown: content,
-    publishDate: rawPublishDate = new Date(),
-    updateDate: rawUpdateDate,
-    cover_image_url: image,
-    tags: rawTags = [],
-    category: rawCategory,
-    author = 'Alexander Stolpe',
-    status = 'draft',
-    metadata = {},
-    readingTime,
-  } = post;
+export const fetchPosts = async (): Promise<Post[]> => {
+  const posts = await getCollection('post');
 
-  const publishDate = rawPublishDate ? new Date(rawPublishDate) : new Date();
-  const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
+  const normalized = await Promise.all(
+    posts.map(async (post) => {
+      const slug = post.data.slug ?? cleanSlug(post.id);
 
-  const category = rawCategory
-    ? {
-        slug: cleanSlug(rawCategory),
-        title: rawCategory,
-      }
-    : undefined;
+      return {
+        ...post,
+        slug,
+        permalink: await generatePermalink({
+          id: post.id,
+          slug,
+          publishDate: post.data.publishDate,
+          category: post.data.category,
+        }),
+      };
+    })
+  );
 
-  const tags = rawTags.map((tag: string) => ({
-    slug: cleanSlug(tag),
-    title: tag,
+  return normalized
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => (b.data.publishDate?.valueOf() ?? 0) - (a.data.publishDate?.valueOf() ?? 0));
+};
+
+export const getStaticPathsBlogPost = async () => {
+  if (!isBlogEnabled || !isBlogPostRouteEnabled) return [];
+
+  return (await fetchPosts()).map((post) => ({
+    params: {
+      blog: post.permalink,
+    },
+    props: {
+      post,
+    },
   }));
-
-  return {
-    id: id,
-    slug: slug,
-    permalink: await generatePermalink({ id, slug, publishDate, category: category?.slug }),
-
-    publishDate: publishDate,
-    updateDate: updateDate,
-
-    title: title,
-    excerpt: excerpt,
-    image: image,
-
-    category: category,
-    tags: tags,
-    author: author,
-
-    draft: status !== 'published',
-
-    metadata,
-
-    content: content,
-    readingTime: readingTime,
-  };
 };
-
-const load = async function (): Promise<Array<Post>> {
-  try {
-    // Fetch posts from external API
-    const { data: posts, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('status', 'published')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      throw new Error(`Supabase query failed: ${error.message}`);
-    }
-
-    if (!posts) {
-      return [];
-    }
-
-    // Normalize posts to match Post interface
-    const normalizedPosts = posts.map(async (post: ExternalPost) => await getNormalizedPostFromAPI(post));
-    const results = (await Promise.all(normalizedPosts)).sort(
-      (a, b) => b.publishDate.valueOf() - a.publishDate.valueOf()
-    );
-
-    return results;
-  } catch (error) {
-    console.error('Failed to fetch posts from external API:', error);
-    // Return empty array as fallback
-    return [];
-  }
-};
-
-let _posts: Array<Post>;
 
 /** */
 export const isBlogEnabled = APP_BLOG.isEnabled;
@@ -147,15 +91,6 @@ export const blogCategoryRobots = APP_BLOG.category.robots;
 export const blogTagRobots = APP_BLOG.tag.robots;
 
 export const blogPostsPerPage = APP_BLOG?.postsPerPage;
-
-/** */
-export const fetchPosts = async (): Promise<Array<Post>> => {
-  if (!_posts) {
-    _posts = await load();
-  }
-
-  return _posts;
-};
 
 /** */
 export const findPostsBySlugs = async (slugs: Array<string>): Promise<Array<Post>> => {
@@ -200,17 +135,6 @@ export const getStaticPathsBlogList = async ({ paginate }: { paginate: PaginateF
     params: { blog: BLOG_BASE || undefined },
     pageSize: blogPostsPerPage,
   });
-};
-
-/** */
-export const getStaticPathsBlogPost = async () => {
-  if (!isBlogEnabled || !isBlogPostRouteEnabled) return [];
-  return (await fetchPosts()).flatMap((post) => ({
-    params: {
-      blog: post.permalink,
-    },
-    props: { post },
-  }));
 };
 
 /** */
